@@ -1,15 +1,16 @@
-- name: get log by telnet
-  hosts: cisco
+- hosts: all
   gather_facts: no
-  sudo: false
+  tasks:
+  - name : get
+    telnet:
+      host: cisco
+      password: cisco
+      login_prompt: "Username: "
+      prompts:
+        - "[>|#]"
+      command:
+        - enable
+        - cisco
+        - terminal length 0
+        - show run
 
-  telnet:
-    host: cisco
-    user: cisco
-    password: cisco
-    login_prompt: "Username: "
-    prompts:
-      - "[>|#]"
-    command:
-      - terminal length 0
-      - show run
