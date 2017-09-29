@@ -4,10 +4,6 @@ import time
 
 c = pexpect.spawn("telnet 172.17.50.254")
 
-logname = "./log" + "test" + ".log"
-wb = open(logname ,'wb')
-c.logfile_read = wb
-
 expect_list = [u"#",
                 u">",
                 u"\nlogin: ",
