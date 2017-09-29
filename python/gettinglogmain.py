@@ -4,12 +4,6 @@ import time
 import __main__
 import openpyxl as px
 
-#import os.path
-#import xlrd
-#ipaddr = 172.17.50.254
-#hostname =
-#logname
-
 expect_list = [u"#",
                 u">",
                 u"\nlogin: ",
@@ -18,12 +12,11 @@ expect_list = [u"#",
                 u"Connection closed by foreign host.",
                 u"Login incorrect"]
 
-
-def login ():
-    c = pexpect.spawn("telnet 172.17.50.254")
+def login ( hostname, address):
+    c = pexpect.spawn("telnet " + address)
     c.expect("Password:")
     c.sendline("cisco")
-    c.expect("2911_RT-A>")
+    c.expect( hostname + ">")
     c.sendline("enable")
     c.expect("Password:")
     c.sendline("enable")
@@ -35,14 +28,13 @@ def length0 ():
     c.expect("2911_RT-A#")
     c.sendline("ter len 0")
 
-def excute_command(command):
+def excute_command(hostname ,command):
     c = __main__.c
-    c.expect("2911_RT-A#")
+    c.expect( hostname + "#")
     c.sendline(command)
-    c.expect("2911_RT-A#")
+    c.expect(hostname +"#")
     time.sleep(3)
-    print(c.before)
-    logname = "./" + "2911_RT-A" + ".cfg"
+    logname = "./" + hostname + ".cfg"
     wb = open(logname ,'wb')
     wb.write(c.before)
 
@@ -59,15 +51,18 @@ def get_excel_hostaddr():
     while ws['A' + str(i)].value != None :
         dct[ws['A' + str(i)].value] = ws['B' + str(i)].value
         i+=1
+    __main__.dct = dct
+
 
 get_excel_hostaddr()
-
-exit()
-
-login()
+key_lst = list(dct.keys())
+#### rupe
+login(key_lst[0],dct[key_lst[0]])
 length0()
-excute_command("show run")
+excute_command( (key_lst[0]),"show run")
 close_settion()
+#####
+exit()
 
 #logname = "./log" + "test" + ".log"
 #wb = open(logname ,'wb')
