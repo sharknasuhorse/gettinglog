@@ -56,8 +56,10 @@ def get_excel_hostaddr():
 
 get_excel_hostaddr()
 key_lst = list(dct.keys())
+#print (key_lst[0])
+#print (dct[key_lst[0]])
 #### rupe
-login(key_lst[0],dct[key_lst[0]])
+login( key_lst[0], dct[key_lst[0]] )
 length0()
 excute_command( (key_lst[0]),"show run")
 close_settion()
