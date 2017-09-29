@@ -1,9 +1,16 @@
 import pexpect
 import sys
 import time
-
+from pwn import *
+#from enert import *
 
 c = pexpect.spawn("telnet 172.17.50.254")
+
+s = remote("172.17.50.254", 23)
+#a = s.sendlineafter("Password:", "cisco")
+a = s.recvuntil("Password:")
+print(a)
+exit()
 
 logname = "./log" + "test" + ".log"
 wb = open(logname ,'wb')
