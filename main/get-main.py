@@ -33,6 +33,8 @@ def execute_command(hostname,command):
     logname = "./" + hostname + ".cfg"
     wb = open(logname ,'wb')
     wb.write(result)
+    wb.close()
+    c.write(b"\n")
 
 
 def close_connection():
@@ -51,6 +53,22 @@ def get_excel_hostaddr():
     __main__.dct = dct
     __main__.i = i
 
+
+def execute_command2(hostname,command):
+    c = __main__.c
+    prompt = hostname + "#"
+    c.read_until(prompt.encode('utf-8'))
+    command = command + "\n"
+    c.write(command.encode('utf-8'))
+    result = c.read_until(prompt.encode('utf-8'))
+    logname = "./" + hostname + "-tech-support.log"
+    wb = open(logname ,'wb')
+    wb.write(result)
+    wb.close()
+    c.write(b"\n")
+
+
+
 if __name__ == '__main__':
     get_excel_hostaddr()
     key_lst = list(dct.keys())
@@ -61,6 +79,7 @@ if __name__ == '__main__':
         login( key_lst[j], dct[key_lst[j]] )
         length0(key_lst[j])
         execute_command( (key_lst[j]),"show run")
+        execute_command2( (key_lst[j]),"show tech")
         close_connection()
         j += 1
     exit()
