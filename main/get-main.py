@@ -57,11 +57,12 @@ if __name__ == '__main__':
     #print (key_lst[0])
     #print (dct[key_lst[0]])
     j = 0
-    while j < i :
+    while j < i - 1 :
         login( key_lst[j], dct[key_lst[j]] )
         length0(key_lst[j])
         execute_command( (key_lst[j]),"show run")
         close_connection()
+        j += 1
     exit()
 
 
