@@ -4,7 +4,6 @@ import time
 import __main__
 import openpyxl as px
 
-
 def login ( hostname , address ):
     c = telnetlib.Telnet(address)
     c.read_until(b"Password:")

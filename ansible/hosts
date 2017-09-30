@@ -1,5 +1,0 @@
-[cisco]
-172.17.133.152
-
-[cisco:vars]
-ansible_telnet_pass=cisco
