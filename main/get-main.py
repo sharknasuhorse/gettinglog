@@ -49,20 +49,20 @@ def get_excel_hostaddr():
         dct[ws['A' + str(i)].value] = ws['B' + str(i)].value
         i+=1
     __main__.dct = dct
+    __main__.i = i
 
-
-get_excel_hostaddr()
-key_lst = list(dct.keys())
-#print (key_lst[0])
-#print (dct[key_lst[0]])
-
-#### rupe ###
-login( key_lst[0], dct[key_lst[0]] )
-length0(key_lst[0])
-execute_command( (key_lst[0]),"show run")
-close_connection()
-##### end ###
-exit()
+if __name__ == '__main__':
+    get_excel_hostaddr()
+    key_lst = list(dct.keys())
+    #print (key_lst[0])
+    #print (dct[key_lst[0]])
+    j = 0
+    while j < i :
+        login( key_lst[j], dct[key_lst[j]] )
+        length0(key_lst[j])
+        execute_command( (key_lst[j]),"show run")
+        close_connection()
+    exit()
 
 
 
