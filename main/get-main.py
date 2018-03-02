@@ -5,12 +5,13 @@ import __main__
 import openpyxl as px
 
 def login ( hostname , address, password ):
-    c = telnetlib.Telnet(address)
+    c = telnetlib.Telnet(address,timeout=3)
+    print("logging")
     c.read_until(b"Password:")
     c.write(b"\n")
     c.read_until(b"Password:")
     c.write(bytes(password,'utf-8') + b"\n")
-    prompt = hostname + ">"
+    prompt = hostname[:-3] + ">"
     c.read_until(prompt.encode('utf-8'))
     c.write(b"enable\n")
     c.read_until(b"Password:")
@@ -49,9 +50,9 @@ def get_excel_hostaddr():
     ws = wb.active
     i = 1
     dct = {}
-    while ws['A' + str(i)].value != None :
-        dct[ws['A' + str(i)].value] = ws['B' + str(i)].value
-        i+=1
+    for i in range(1,90):
+        #print(ws['A' + str(i)].value)
+        dct[ws['A' + str(i)].value + "-" +"{0:02d}".format(i)] = ws['B' + str(i)].value
     __main__.dct = dct
     __main__.i = i
 
@@ -74,14 +75,17 @@ passlist = [ "Cnj4BKzr","Dan3ckyA","q0bC50xE","ZWKKEFzV","JxYmgogc","42AUVvLA"]
 if __name__ == '__main__':
     get_excel_hostaddr()
     key_lst = list(dct.keys())
-    print (key_lst[0])
-    print (dct[key_lst[0]])
-
     j = 0
     while j < i - 1 :
-        login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
-        length0(key_lst[j])
-        execute_command( (key_lst[j]),"show run",j)
+        try:
+            print(key_lst[j][:-3])
+            login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
+        except:
+            print(dct[key_lst[j]])
+            continue
+        print("len0")
+        length0(key_lst[j][:-3])
+        execute_command( (key_lst[j][:-3]),"show run",j)
         close_connection()
         j += 1
         print("next while")
