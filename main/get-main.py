@@ -4,17 +4,19 @@ import time
 import __main__
 import openpyxl as px
 
-def login ( hostname , address ):
+def login ( hostname , address, password ):
     c = telnetlib.Telnet(address)
     c.read_until(b"Password:")
-    c.write(b"cisco\n")
+    c.write(b"\n")
+    c.read_until(b"Password:")
+    c.write(bytes(password,'utf-8') + b"\n")
     prompt = hostname + ">"
     c.read_until(prompt.encode('utf-8'))
     c.write(b"enable\n")
     c.read_until(b"Password:")
-    c.write(b"cisco\n")
+    c.write(bytes(password,'utf-8') + b"\n")
+    print("fin login")
     __main__.c = c
-
 
 def length0 (hostname):
     c = __main__.c
@@ -23,14 +25,14 @@ def length0 (hostname):
     c.write(b"ter len 0\n")    
 
 
-def execute_command(hostname,command):
+def execute_command(hostname,command, teamnum):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
     command = command + "\n"
     c.write(command.encode('utf-8'))
     result = c.read_until(prompt.encode('utf-8'))
-    logname = "./" + hostname + ".cfg"
+    logname = "./" + str(int(teamnum/6+1)) + "-"  + hostname + ".cfg"
     wb = open(logname ,'wb')
     wb.write(result)
     wb.close()
@@ -66,22 +68,23 @@ def execute_command2(hostname,command):
     wb.write(result)
     wb.close()
     c.write(b"\n")
-
+passlist = [ "Cnj4BKzr","Dan3ckyA","q0bC50xE","ZWKKEFzV","JxYmgogc","42AUVvLA"]
 
 
 if __name__ == '__main__':
     get_excel_hostaddr()
     key_lst = list(dct.keys())
-    #print (key_lst[0])
-    #print (dct[key_lst[0]])
+    print (key_lst[0])
+    print (dct[key_lst[0]])
+
     j = 0
     while j < i - 1 :
-        login( key_lst[j], dct[key_lst[j]] )
+        login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
         length0(key_lst[j])
-        execute_command( (key_lst[j]),"show run")
-        execute_command2( (key_lst[j]),"show tech")
+        execute_command( (key_lst[j]),"show run",j)
         close_connection()
         j += 1
+        print("next while")
     exit()
 
 
