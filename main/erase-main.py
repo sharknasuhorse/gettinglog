@@ -6,7 +6,7 @@ import openpyxl as px
 
 def login ( hostname , address, password ):
     c = telnetlib.Telnet(address,timeout=3)
-    print( hostname + "logging")
+    print("logging")
     c.read_until(b"Password:")
     c.write(b"\n")
     c.read_until(b"Password:")
@@ -16,9 +16,8 @@ def login ( hostname , address, password ):
     c.write(b"enable\n")
     c.read_until(b"Password:")
     c.write(bytes(password,'utf-8') + b"\n")
-    print( hostname + " fin login")
+    print("fin login")
     __main__.c = c
-
 
 def length0 (hostname):
     c = __main__.c
@@ -27,17 +26,30 @@ def length0 (hostname):
     c.write(b"ter len 0\n")    
 
 
-
 def execute_command(hostname,command, teamnum):
     c = __main__.c
-    command = command + "\n"
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
-    c.write(command.encode('utf-8'))
-    c.read_until(b"??")
+    print("a")
+    print("b")
+    c.write(b"erase startup-config\n")
+    c.read_until(b"[confirm]")
+    print("c")
     c.write(b"y\n")
+    c.read_until(prompt.encode('utf-8'))
+    c.write(b"delete vlan.dat\n")
+    c.read_until(b"?")
+    c.write(b"\n")
+    c.read_until(b"[confirm]")
+    print("c")
+    c.write(b"y\n")
+    c.read_until(prompt.encode('utf-8'))
+    #c.write(b"reload\n")
+    #c.read_until(b"Proceed with reload? [confirm]")
+    #c.write(b"\n")
     c.write(b"\n")
     print( hostname +"erase done")
+
 
 def close_connection():
     c = __main__.c
@@ -49,7 +61,7 @@ def get_excel_hostaddr():
     ws = wb.active
     i = 1
     dct = {}
-    for i in range(1,90):
+    for i in range(1,47):
         #print(ws['A' + str(i)].value)
         dct[ws['A' + str(i)].value + "-" +"{0:02d}".format(i)] = ws['B' + str(i)].value
     __main__.dct = dct
@@ -75,18 +87,20 @@ if __name__ == '__main__':
     get_excel_hostaddr()
     key_lst = list(dct.keys())
     j = 0
-    while j < i :
+    while j < i  :
         try:
             print(key_lst[j][:-3])
             login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
         except:
             print(dct[key_lst[j]])
             continue
+        print("len0")
         length0(key_lst[j][:-3])
+        print("exes")
         execute_command( (key_lst[j][:-3]),"show run",j)
         close_connection()
         j += 1
-        print( j + "next while")
+        print("next while")
     exit()
 
 
