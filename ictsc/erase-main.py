@@ -3,8 +3,6 @@ import sys
 import time
 import __main__
 import openpyxl as px
-import csv
-
 
 def login ( hostname , address, password ):
     c = telnetlib.Telnet(address,timeout=3)
@@ -28,18 +26,29 @@ def length0 (hostname):
     c.write(b"ter len 0\n")    
 
 
-def exe_showrun_cmd(hostname,command,teamnum):
+def execute_command(hostname,command, teamnum):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
-    command = command + "\n"
-    c.write(command.encode('utf-8'))
-    result = c.read_until(prompt.encode('utf-8'))
-    logname = "./" + str(int(teamnum/6+1)) + "-"  + hostname + ".cfg"
-    wb = open(logname ,'wb')
-    wb.write(result)
-    wb.close()
+    print("a")
+    print("b")
+    c.write(b"erase startup-config\n")
+    c.read_until(b"[confirm]")
+    print("c")
+    c.write(b"y\n")
+    c.read_until(prompt.encode('utf-8'))
+    c.write(b"delete vlan.dat\n")
+    c.read_until(b"?")
     c.write(b"\n")
+    c.read_until(b"[confirm]")
+    print("c")
+    c.write(b"y\n")
+    c.read_until(prompt.encode('utf-8'))
+    #c.write(b"reload\n")
+    #c.read_until(b"Proceed with reload? [confirm]")
+    #c.write(b"\n")
+    c.write(b"\n")
+    print( hostname +"erase done")
 
 
 def close_connection():
@@ -47,24 +56,19 @@ def close_connection():
     c.write(b"exit\n")
 
 
-def get_hostaddr():
+def get_excel_hostaddr():
     wb = px.load_workbook('testbook.xlsx')
     ws = wb.active
     i = 1
     dct = {}
-    for i in range(1,90):
+    for i in range(1,47):
         #print(ws['A' + str(i)].value)
         dct[ws['A' + str(i)].value + "-" +"{0:02d}".format(i)] = ws['B' + str(i)].value
     __main__.dct = dct
     __main__.i = i
 
 
-def get_hostaddr():
-    with open('testhosts.csv', 'r') as hosts_csv:
-        hostlist = list(csv.reader(hosts_csv))
-
-
-def exe_showrun_cmd2(hostname,command):
+def execute_command2(hostname,command):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
@@ -76,15 +80,14 @@ def exe_showrun_cmd2(hostname,command):
     wb.write(result)
     wb.close()
     c.write(b"\n")
-
-
 passlist = [ "Cnj4BKzr","Dan3ckyA","q0bC50xE","ZWKKEFzV","JxYmgogc","42AUVvLA"]
 
+
 if __name__ == '__main__':
-    get_hostaddr()
+    get_excel_hostaddr()
     key_lst = list(dct.keys())
     j = 0
-    while j < i - 1 :
+    while j < i  :
         try:
             print(key_lst[j][:-3])
             login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
@@ -93,7 +96,8 @@ if __name__ == '__main__':
             continue
         print("len0")
         length0(key_lst[j][:-3])
-        exe_showrun_cmd( (key_lst[j][:-3]),"show run",j)
+        print("exes")
+        execute_command( (key_lst[j][:-3]),"show run",j)
         close_connection()
         j += 1
         print("next while")

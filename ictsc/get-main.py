@@ -3,8 +3,6 @@ import sys
 import time
 import __main__
 import openpyxl as px
-import csv
-
 
 def login ( hostname , address, password ):
     c = telnetlib.Telnet(address,timeout=3)
@@ -28,7 +26,7 @@ def length0 (hostname):
     c.write(b"ter len 0\n")    
 
 
-def exe_showrun_cmd(hostname,command,teamnum):
+def execute_command(hostname,command, teamnum):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
@@ -47,7 +45,7 @@ def close_connection():
     c.write(b"exit\n")
 
 
-def get_hostaddr():
+def get_excel_hostaddr():
     wb = px.load_workbook('testbook.xlsx')
     ws = wb.active
     i = 1
@@ -59,12 +57,7 @@ def get_hostaddr():
     __main__.i = i
 
 
-def get_hostaddr():
-    with open('testhosts.csv', 'r') as hosts_csv:
-        hostlist = list(csv.reader(hosts_csv))
-
-
-def exe_showrun_cmd2(hostname,command):
+def execute_command2(hostname,command):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
@@ -76,12 +69,11 @@ def exe_showrun_cmd2(hostname,command):
     wb.write(result)
     wb.close()
     c.write(b"\n")
-
-
 passlist = [ "Cnj4BKzr","Dan3ckyA","q0bC50xE","ZWKKEFzV","JxYmgogc","42AUVvLA"]
 
+
 if __name__ == '__main__':
-    get_hostaddr()
+    get_excel_hostaddr()
     key_lst = list(dct.keys())
     j = 0
     while j < i - 1 :
@@ -93,7 +85,7 @@ if __name__ == '__main__':
             continue
         print("len0")
         length0(key_lst[j][:-3])
-        exe_showrun_cmd( (key_lst[j][:-3]),"show run",j)
+        execute_command( (key_lst[j][:-3]),"show run",j)
         close_connection()
         j += 1
         print("next while")
