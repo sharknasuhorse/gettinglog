@@ -1,31 +1,29 @@
-import sys
 import time
 import __main__
 import openpyxl as px
 import csv
+import cisco_cmd
 
 def get_hostaddr():
     with open('testhosts.csv', 'r') as hosts_csv:
         hostlist = list(csv.reader(hosts_csv))
         return hostlist
 
-
-
 if __name__ == '__main__':
     hostlist = get_hostaddr()
+    for x in hostlist:
+        for y in x:
+            print(x)
 
     while True :
         try:
-            print(key_lst[j][:-3])
-            login( key_lst[j], dct[key_lst[j]],passlist[j % 6] )
+            print()
+            cisco_cmd.login()
         except:
-            print(dct[key_lst[j]])
+            print("ログイン出来ませんでした")
             continue
-        print("len0")
-        length0(key_lst[j][:-3])
-        exe_showrun_cmd( (key_lst[j][:-3]),"show run",j)
-        close_connection()
-        j += 1
+        cisco_cmd.length0()
+        cisco_cmd.exe_showrun_cmd( )
+        cisco_cmd.close_connection()
         print("next while")
     exit()
-
