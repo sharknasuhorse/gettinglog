@@ -23,7 +23,7 @@ if __name__ == '__main__':
             print("ログイン出来ませんでした")
             continue
         cisco_cmd.length0()
-        cisco_cmd.exe_showrun_cmd( )
+        cisco_cmd.cmd_showrun( )
         cisco_cmd.close_connection()
-        print("next while")
+        print("next whsssile")
     exit()

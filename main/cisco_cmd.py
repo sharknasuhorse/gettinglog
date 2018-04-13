@@ -25,7 +25,7 @@ def close_connection():
     c = __main__.c
     c.write(b"exit\n")
 
-def exe_showrun_cmd(hostname,command,teamnum):
+def cmd_showrun(hostname,command,teamnum):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
@@ -38,7 +38,7 @@ def exe_showrun_cmd(hostname,command,teamnum):
     wb.close()
     c.write(b"\n")
 
-def exe_showrun_cmd2(hostname,command):
+def cmd_showtech(hostname,command):
     c = __main__.c
     prompt = hostname + "#"
     c.read_until(prompt.encode('utf-8'))
