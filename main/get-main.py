@@ -1,6 +1,5 @@
 import time
 import __main__
-import openpyxl as px
 import csv
 import cisco_cmd
 

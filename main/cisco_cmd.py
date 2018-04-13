@@ -2,7 +2,6 @@ import telnetlib
 
 def login ( hostname , address, password ):
     c = telnetlib.Telnet(address,timeout=3)
-    print("logging")
     c.read_until(b"Password:")
     c.write(b"\n")
     c.read_until(b"Password:")
@@ -12,7 +11,6 @@ def login ( hostname , address, password ):
     c.write(b"enable\n")
     c.read_until(b"Password:")
     c.write(bytes(password,'utf-8') + b"\n")
-    print("fin login")
     __main__.c = c
 
 def length0 (hostname):
