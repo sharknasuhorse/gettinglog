@@ -1,5 +1,8 @@
 import telnetlib
 
+prompt_user = ">"
+prompt_enable = "#" 
+
 def login ( hostname , address, password ):
     c = telnetlib.Telnet(address,timeout=3)
     c.read_until(b"Password:")
